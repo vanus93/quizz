@@ -3,46 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Kuis Web</title>
-    <!-- Import File CSS Utama -->
+    <title>Kuis Online Responsive</title>
     <link rel="stylesheet" href="style.css">
-    <!-- PapaParse CDN untuk membaca data CSV -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><circle cx=%2250%22 cy=%2250%22 r=%2250%22 fill=%22%233b82f6%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22sans-serif%22 font-weight=%22bold%22>Q</text></svg>">
+    <!-- Library PapaParse untuk Parsing CSV -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
 </head>
 <body>
 
-    <div class="container">
-        <h1>Kuis Online</h1>
-
-        <!-- Form Input Link Google Sheet -->
-        <div class="card" id="setupContainer">
-            <label for="sheetInput">Masukkan Link / ID Google Sheet:</label>
-            <input type="text" id="sheetInput" placeholder="Tempelkan link atau ID..." 
-                   value=" ">
-            <button id="startBtn" onclick="startGame()">Mulai Game</button>
-        </div>
-
-        <!-- Area Main Game / Soal -->
-        <div id="quizContainer" class="card hidden">
-            <h2 id="questionText">Memuat soal...</h2>
-            <div id="optionsContainer"></div>
-        </div>
-
-        <!-- Area Resume / Rekap Hasil Akhir -->
-        <div id="quizSummary" class="card hidden">
-            <h2>🎉 Resume Hasil Kuis</h2>
-            <div class="score-box">
-                <p>Skor Anda:</p>
-                <h1 id="scoreText">0 / 0</h1>
-                <p id="percentageText">0%</p>
+    <div class="app-container">
+        
+        <!-- 1. HALAMAN SETUP / INPUT LINK -->
+        <div id="setupContainer">
+            <h2>Mulai Kuis</h2>
+            <p>Masukkan URL atau ID Google Sheet soal kamu</p>
+            <div class="input-group">
+                <input type="text" id="sheetInput" placeholder="Tempel link Google Sheet di sini..." />
+                <button class="btn-primary" onclick="startGame()">Mulai Kuis</button>
             </div>
-            <h3>Detail Jawaban:</h3>
-            <div id="summaryDetails"></div>
-            <button onclick="resetQuiz()" style="margin-top: 20px;">Main Lagi</button>
         </div>
+
+        <!-- 2. HALAMAN KUIS -->
+        <div id="quizContainer" class="hidden">
+            <div id="questionText" class="question-header">Memuat soal...</div>
+            <div id="optionsContainer" class="options-grid">
+                <!-- Tombol Opsi Jawaban di-generate via JavaScript -->
+            </div>
+        </div>
+
+        <!-- 3. HALAMAN RINGKASAN HASIL -->
+        <div id="quizSummary" class="hidden">
+            <div class="summary-header">
+                <h2>Hasil Kuis</h2>
+                <div id="scoreText" class="score-badge">0 / 0</div>
+                <div id="percentageText" class="percentage-badge">Nilai: 0%</div>
+            </div>
+            
+            <div id="summaryDetails" class="summary-list">
+                <!-- Detail Jawaban di-generate via JavaScript -->
+            </div>
+
+            <button class="btn-primary" onclick="resetQuiz()">Coba Lagi</button>
+        </div>
+
     </div>
 
-    <!-- Import File JavaScript Utama -->
     <script src="script.js"></script>
 </body>
 </html>
