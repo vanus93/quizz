@@ -1,11 +1,11 @@
-// Variable Global
+// Variable Global State
 let questions = [];
 let currentQuestionIndex = 0;
-let userAnswers = []; // Menampung riwayat jawaban untuk resume
+let userAnswers = [];
 let score = 0;
 
 /**
- * Helper: Mengacak urutan elemen dalam array (Fisher-Yates Shuffle)
+ * Mengacak urutan elemen dalam array (Fisher-Yates Shuffle)
  */
 function shuffleArray(array) {
     let shuffled = [...array];
@@ -17,22 +17,19 @@ function shuffleArray(array) {
 }
 
 /**
- * Mengekstrak ID Google Sheet dan memaksanya menggunakan GViz API CSV Endpoint
+ * Format & Paksa URL menggunakan Google Visualization (GViz) CSV Endpoint
  */
 function formatCsvUrl(input) {
   let cleanInput = input.trim();
   let sheetId = "";
 
-  // 1. Ekstrak ID jika input berupa URL Google Sheet (edit, view, pub, dll)
   const sheetIdMatch = cleanInput.match(/\/d\/([a-zA-Z0-9-_]+)/);
   if (sheetIdMatch && sheetIdMatch[1]) {
     sheetId = sheetIdMatch[1];
   } else if (!cleanInput.includes('http')) {
-    // 2. Jika input yang dimasukkan HANYA ID-nya saja
     sheetId = cleanInput;
   }
 
-  // Jika ID ditemukan, gunakan GViz API Endpoint (Anti HTML/Web Page)
   if (sheetId) {
     return `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv`;
   }
@@ -41,12 +38,12 @@ function formatCsvUrl(input) {
 }
 
 /**
- * Memuat data soal dari Google Sheet & mengacak urutannya
+ * Fetch Data dari Google Sheet & Acak Urutan Soal
  */
 function loadQuestions(rawUrl) {
     let csvUrl = formatCsvUrl(rawUrl);
     
-    // Cache Buster agar data selalu update saat Sheet diedit
+    // Cache Buster untuk mencegah browser HP menyimpan cache file lama
     const cacheBuster = (csvUrl.includes('?') ? '&' : '?') + 't=' + new Date().getTime();
     const finalUrl = csvUrl + cacheBuster;
 
@@ -55,10 +52,10 @@ function loadQuestions(rawUrl) {
         header: true,
         skipEmptyLines: true,
         complete: function(results) {
-            // Proteksi Tambahan: Cek jika Google mengembalikan file HTML
+            // Proteksi jika Google mengembalikan halaman login HTML
             const firstKey = results.data[0] ? Object.keys(results.data[0])[0] : '';
             if (firstKey.toLowerCase().includes('html') || firstKey.toLowerCase().includes('doctype')) {
-                alert("Akses Ditolak/File HTML: Pastikan akses Google Sheet diatur ke 'Anyone with the link' (Siapa saja yang memiliki link).");
+                alert("Akses Ditolak: Pastikan akses Google Sheet diatur ke 'Anyone with the link'.");
                 return;
             }
 
@@ -66,7 +63,7 @@ function loadQuestions(rawUrl) {
                 // ACAK URUTAN SOAL
                 questions = shuffleArray(results.data);
 
-                // Reset State Game
+                // Reset State
                 currentQuestionIndex = 0;
                 score = 0;
                 userAnswers = [];
@@ -76,18 +73,18 @@ function loadQuestions(rawUrl) {
                 document.getElementById('quizContainer').classList.remove('hidden');
                 displayQuestion();
             } else {
-                alert("File berhasil dibaca, tetapi tidak ada data soal di dalamnya. Cek header kolom!");
+                alert("Data soal tidak ditemukan. Periksa kembali struktur header Google Sheet kamu.");
             }
         },
         error: function(err) {
             console.error("Error PapaParse:", err);
-            alert("Gagal memuat soal. Pastikan link Google Sheet benar dan opsi 'General Access' diset ke Anyone with the link.");
+            alert("Gagal memuat soal. Pastikan link Google Sheet benar dan akses diset ke Public.");
         }
     });
 }
 
 /**
- * Helper fleksibel untuk pencarian nama kolom (case-insensitive)
+ * Helper Pencarian Nama Kolom (Case-Insensitive)
  */
 function getFieldValue(row, possibleKeys) {
     for (let key of Object.keys(row)) {
@@ -100,7 +97,7 @@ function getFieldValue(row, possibleKeys) {
 }
 
 /**
- * Menampilkan Soal dan Opsi Jawaban (Soal & Opsi Teracak)
+ * Menampilkan Soal & Opsi Jawaban Teracak
  */
 function displayQuestion() {
     if (currentQuestionIndex >= questions.length) {
@@ -115,17 +112,18 @@ function displayQuestion() {
 
     const optionsDiv = document.getElementById('optionsContainer');
     optionsDiv.innerHTML = '';
+    optionsDiv.classList.remove('disabled'); // Re-enable tombol untuk soal baru
 
     const optionKeys = ['a', 'b', 'c', 'd'];
     let availableOptions = [];
 
-    // Kumpulkan opsi yang memiliki isi
+    // Kumpulkan opsi yang tersedia
     optionKeys.forEach(opt => {
         const optValue = getFieldValue(currentQ, [opt, `option_${opt}`, `pilihan_${opt}`, `jawaban_${opt}`]);
         if (optValue) {
             availableOptions.push({
                 key: opt,        // Identitas kunci asli ('a', 'b', 'c', atau 'd')
-                value: optValue  // Teks jawaban
+                value: optValue  // Teks Jawaban
             });
         }
     });
@@ -135,21 +133,27 @@ function displayQuestion() {
 
     // Tampilkan tombol opsi
     availableOptions.forEach((optItem, index) => {
-        const displayLabel = String.fromCharCode(65 + index); // Ubah index 0,1,2,3 menjadi A, B, C, D
+        const displayLabel = String.fromCharCode(65 + index); // Ubah index ke huruf (A, B, C, D)
         const btn = document.createElement('button');
         
         btn.innerText = `${displayLabel}. ${optItem.value}`;
-        // Tetap meneruskan optItem.key (kunci asli dari sheet) untuk pengecekan skor
-        btn.onclick = () => handleAnswer(optItem.key, optItem.value); 
+        btn.setAttribute('data-key', optItem.key.toLowerCase()); // Simpan kunci asli di atribut
+        
+        btn.onclick = () => handleAnswer(optItem.key, optItem.value, btn); 
         
         optionsDiv.appendChild(btn);
     });
 }
 
 /**
- * Menyimpan jawaban user & lanjut otomatis
+ * Menyimpan Jawaban, Memberi Indikator Warna, & Memberi Jeda
  */
-function handleAnswer(selectedOptKey, selectedText) {
+function handleAnswer(selectedOptKey, selectedText, clickedButton) {
+    const optionsDiv = document.getElementById('optionsContainer');
+    
+    // Kunci tombol agar tidak bisa di-spam klik selama jeda
+    optionsDiv.classList.add('disabled');
+
     const currentQ = questions[currentQuestionIndex];
     const questionText = getFieldValue(currentQ, ['soal', 'question', 'pertanyaan']) || 'Soal';
     const correctAnswerKey = (getFieldValue(currentQ, ['kunci', 'jawaban', 'key', 'correct']) || '').trim().toLowerCase();
@@ -158,8 +162,20 @@ function handleAnswer(selectedOptKey, selectedText) {
 
     if (isCorrect) {
         score++;
+        clickedButton.classList.add('btn-correct'); // Warna Hijau
+    } else {
+        clickedButton.classList.add('btn-wrong');   // Warna Merah
+
+        // Tunjukkan tombol dengan jawaban yang benar
+        const buttons = optionsDiv.querySelectorAll('button');
+        buttons.forEach(btn => {
+            if (btn.getAttribute('data-key') === correctAnswerKey) {
+                btn.classList.add('btn-correct');
+            }
+        });
     }
 
+    // Simpan Histori
     userAnswers.push({
         questionNumber: currentQuestionIndex + 1,
         questionText: questionText,
@@ -168,12 +184,15 @@ function handleAnswer(selectedOptKey, selectedText) {
         isCorrect: isCorrect
     });
 
-    currentQuestionIndex++;
-    displayQuestion();
+    // Jeda 1 detik (1000ms) sebelum berpindah ke soal berikutnya
+    setTimeout(() => {
+        currentQuestionIndex++;
+        displayQuestion();
+    }, 1000);
 }
 
 /**
- * Menampilkan Halaman Resume Hasil
+ * Tampilan Hasil Kuis
  */
 function showSummary() {
     document.getElementById('quizContainer').classList.add('hidden');
@@ -203,7 +222,7 @@ function showSummary() {
 }
 
 /**
- * Reset Permainan
+ * Reset Game
  */
 function resetQuiz() {
     document.getElementById('quizSummary').classList.add('hidden');
@@ -211,7 +230,7 @@ function resetQuiz() {
 }
 
 /**
- * Trigger Tombol Mulai Game
+ * Handler Tombol Mulai
  */
 function startGame() {
     const inputVal = document.getElementById('sheetInput').value;
