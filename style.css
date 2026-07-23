@@ -1,179 +1,225 @@
-/* Reset & Styling Dasar */
+/* ==========================================
+   RESET & BASE STYLES
+   ========================================== */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
-    background-color: #f4f7f6;
-    color: #333;
+    background-color: #f4f6f9;
+    color: #2c3e50;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Mengatur dasar perataan dari atas */
     min-height: 100vh;
-    padding: 20px;
+    padding: 16px;
 }
 
-.container {
+/* Container Utama */
+.app-container {
     width: 100%;
-    max-width: 500px;
-}
-
-/* Judul Utama */
-h1 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #2c3e50;
-    font-size: 1.8rem;
-}
-
-/* Kartu Pembungkus (Card) */
-.card {
+    max-width: 480px;
     background: #ffffff;
-    padding: 25px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
-    margin-bottom: 20px;
-    transition: all 0.3s ease;
+    border-radius: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    padding: 24px 20px;
+    
+    /* ATUR POSISI KE ATAS DI SINI */
+    margin-top: 60px; /* <--- Ubah angka ini untuk geser naik/turun */
+    margin-bottom: 40px; 
 }
 
 .hidden {
     display: none !important;
 }
 
-/* Input Form */
-label {
-    display: block;
-    font-weight: 600;
+/* ==========================================
+   HALAMAN SETUP
+   ========================================== */
+#setupContainer h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
     margin-bottom: 8px;
-    color: #4a5568;
-    font-size: 0.95rem;
+    color: #1a252f;
+    text-align: center;
+}
+
+#setupContainer p {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
 input[type="text"] {
     width: 100%;
-    padding: 12px 15px;
+    padding: 14px 16px;
     border: 2px solid #e2e8f0;
-    border-radius: 8px;
+    border-radius: 12px;
     font-size: 0.95rem;
     outline: none;
-    transition: border-color 0.2s ease;
-    margin-bottom: 15px;
+    transition: all 0.2s ease;
 }
 
 input[type="text"]:focus {
-    border-color: #3182ce;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
 }
 
-/* Tombol Utama */
-button {
-    width: 100%;
-    padding: 12px 20px;
-    background-color: #3182ce;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-button:hover {
-    background-color: #2b6cb0;
-}
-
-button:active {
-    transform: scale(0.98);
-}
-
-/* Area Soal & Opsi */
-#questionText {
-    font-size: 1.15rem;
-    color: #1a202c;
-    margin-bottom: 20px;
-    line-height: 1.5;
-}
-
-#optionsContainer {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-#optionsContainer button {
-    background-color: #edf2f7;
-    color: #2d3748;
-    text-align: left;
-    border: 1px solid #cbd5e0;
-    padding: 14px 18px;
-}
-
-#optionsContainer button:hover {
-    background-color: #e2e8f0;
-    border-color: #a0aec0;
-}
-
-/* Styling Khusus Resume / Hasil Akhir */
-.score-box {
-    text-align: center;
-    background: #edf2f7;
-    padding: 20px;
-    border-radius: 10px;
-    margin: 15px 0 25px 0;
-}
-
-.score-box h1 {
-    font-size: 2.5rem;
-    color: #2b6cb0;
-    margin: 5px 0;
-}
-
-#percentageText {
+/* ==========================================
+   HALAMAN KUIS & TOMBOL OPSI
+   ========================================== */
+.question-header {
     font-size: 1.1rem;
-    font-weight: bold;
-    color: #4a5568;
+    font-weight: 600;
+    line-height: 1.5;
+    color: #1e293b;
+    margin-bottom: 24px;
+    background: #f8fafc;
+    padding: 16px;
+    border-radius: 12px;
+    border-left: 4px solid #3b82f6;
 }
 
-#summaryDetails {
+.options-grid {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    margin-top: 15px;
-    max-height: 350px;
-    overflow-y: auto;
-    padding-right: 5px;
 }
 
-.summary-item {
-    padding: 12px 15px;
-    border-radius: 8px;
-    border-left: 5px solid #cbd5e0;
-    background: #f8fafc;
-    font-size: 0.9rem;
+/* Style Tombol Jawaban (Thumb-Friendly) */
+.options-grid button, .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background-color: #ffffff;
+    border: 2px solid #e2e8f0;
+    border-radius: 14px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #334155;
+    text-align: left;
+    cursor: pointer;
+    transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.1s ease;
+    display: flex;
+    align-items: center;
 }
 
-.summary-item.correct {
-    border-left-color: #38a169;
-    background-color: #f0fff4;
+.options-grid button:active {
+    transform: scale(0.98);
 }
 
-.summary-item.wrong {
-    border-left-color: #e53e3e;
-    background-color: #fff5f5;
+/* Efek Warna Jawaban Benar (Hijau) */
+.options-grid button.btn-correct {
+    background-color: #dcfce7 !important;
+    border-color: #22c55e !important;
+    color: #15803d !important;
+    font-weight: 700;
 }
 
-.summary-item p {
+/* Efek Warna Jawaban Salah (Merah) */
+.options-grid button.btn-wrong {
+    background-color: #fee2e2 !important;
+    border-color: #ef4444 !important;
+    color: #b91c1c !important;
+    font-weight: 700;
+}
+
+/* Mencegah double click saat jeda pindah soal */
+.options-grid.disabled button {
+    pointer-events: none;
+}
+
+/* Tombol Utama (Mulai / Ulang) */
+.btn-primary {
+    background-color: #3b82f6;
+    color: #ffffff;
+    border: none;
+    font-weight: 600;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.25);
+}
+
+.btn-primary:active {
+    background-color: #2563eb;
+}
+
+/* ==========================================
+   HALAMAN RINGKASAN HASIL
+   ========================================== */
+.summary-header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e2e8f0;
+    margin-bottom: 20px;
+}
+
+.summary-header h2 {
+    font-size: 1.3rem;
+    margin-bottom: 12px;
+}
+
+.score-badge {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #3b82f6;
     margin-bottom: 4px;
 }
 
-.user-ans {
-    color: #2d3748;
+.percentage-badge {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #64748b;
 }
 
-.correct-ans {
-    color: #c53030;
-    font-size: 0.85rem;
+.summary-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-height: 50vh;
+    overflow-y: auto;
+    padding-right: 4px;
+    margin-bottom: 20px;
+}
+
+.summary-item {
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 0.88rem;
+    line-height: 1.4;
+}
+
+.summary-item p {
+    margin-bottom: 6px;
+}
+
+.summary-item.correct {
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+}
+
+.summary-item.wrong {
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+.summary-item .user-ans {
+    font-weight: 600;
+}
+
+.summary-item .correct-ans {
+    color: #15803d;
+    font-weight: 600;
+    margin-top: 4px;
 }
