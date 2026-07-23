@@ -1,0 +1,179 @@
+/* Reset & Styling Dasar */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: #f4f7f6;
+    color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 500px;
+}
+
+/* Judul Utama */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #2c3e50;
+    font-size: 1.8rem;
+}
+
+/* Kartu Pembungkus (Card) */
+.card {
+    background: #ffffff;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 20px;
+    transition: all 0.3s ease;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Input Form */
+label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #4a5568;
+    font-size: 0.95rem;
+}
+
+input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s ease;
+    margin-bottom: 15px;
+}
+
+input[type="text"]:focus {
+    border-color: #3182ce;
+}
+
+/* Tombol Utama */
+button {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: #3182ce;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+button:hover {
+    background-color: #2b6cb0;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* Area Soal & Opsi */
+#questionText {
+    font-size: 1.15rem;
+    color: #1a202c;
+    margin-bottom: 20px;
+    line-height: 1.5;
+}
+
+#optionsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#optionsContainer button {
+    background-color: #edf2f7;
+    color: #2d3748;
+    text-align: left;
+    border: 1px solid #cbd5e0;
+    padding: 14px 18px;
+}
+
+#optionsContainer button:hover {
+    background-color: #e2e8f0;
+    border-color: #a0aec0;
+}
+
+/* Styling Khusus Resume / Hasil Akhir */
+.score-box {
+    text-align: center;
+    background: #edf2f7;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 15px 0 25px 0;
+}
+
+.score-box h1 {
+    font-size: 2.5rem;
+    color: #2b6cb0;
+    margin: 5px 0;
+}
+
+#percentageText {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #4a5568;
+}
+
+#summaryDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 15px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.summary-item {
+    padding: 12px 15px;
+    border-radius: 8px;
+    border-left: 5px solid #cbd5e0;
+    background: #f8fafc;
+    font-size: 0.9rem;
+}
+
+.summary-item.correct {
+    border-left-color: #38a169;
+    background-color: #f0fff4;
+}
+
+.summary-item.wrong {
+    border-left-color: #e53e3e;
+    background-color: #fff5f5;
+}
+
+.summary-item p {
+    margin-bottom: 4px;
+}
+
+.user-ans {
+    color: #2d3748;
+}
+
+.correct-ans {
+    color: #c53030;
+    font-size: 0.85rem;
+}
